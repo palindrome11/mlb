@@ -43,30 +43,29 @@ Thus the files can be pulled at any time and staged for upload.
 
 This build contains 5 python files and a /sandbox directory with 2 additional python files
 
-/sandbox:
-  /sandbox/db_create.py:
+/rosters/sandbox:
+db_create.py:
   Completely initializes the Postgres database depicted above
   as rosters_snapshots. Eventually place it in a utilities directory.
 
- /sandbox/roster_play.py:
+ roster_play.py:
    Strictly for testing and has some rudemtary and other tests already built.
 
 /
 api_get_roster.py:
-calls the API as depicted above and places the .json file into a staging 
-directory /raw_data in the file format depicted above.
+    calls the API as depicted above and places the .json file into a staging 
+    directory /raw_data in the file format depicted above.
 
 roster_loads.py:
-Performs transformations on the .json files and loads the rosters_snapshots database via an upsert 
-of the daily data file and then archives the .json files to the /raw_data/daily_rosters/archive subdirectory.
-
+    Performs transformations on the .json files and loads the rosters_snapshots database via an upsert 
+    of the daily data file and then archives the .json files to the /raw_data/daily_rosters/archive subdirectory.
 
 team_ids.py:
-Lists all the MLB teams and their team_ids
+    Lists all the MLB teams and their team_ids
 
 test_files.py:
-A utility to determine if two files are either a duplicate of each other or are 
-unique files. It does this by looking at the size and then if the SHA256 Checksum of each file.
+    A utility to determine if two files are either a duplicate of each other or are 
+    unique files. It does this by looking at the size and then the SHA256 Checksum of each file.
 
 
 NOTABLES:
@@ -105,7 +104,10 @@ The SQL used for the upsert is:
         %(player_name)s, %(position)s, %(status)s)
     ON CONFLICT (snapshot_date, team_id, player_id) DO NOTHING;
     """
-As can be seen there is a daily grain here that is defaulting to the earliest databse update. I will be vhanging this behavior in a subsequent update to use the latest revision in a day and versionize mutliple updates if they occur in the same day. For now, we will keep the current setup as the Daily Grain is important to maintain for later operational use in analysis.
+
+As can be seen there is a daily grain here that is defaulting to the earliest databse update. 
+I will be changing this behavior in a subsequent update to use the latest revision in a day and versionize mutliple updates if they occur in the same day. 
+For now, we will keep the current setup as the Daily Grain is important to maintain for later operational use in analysis.
 
 
 
