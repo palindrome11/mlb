@@ -38,11 +38,11 @@ The database is designed to allow for OLAP analysis of MLB roster transactions.
 
 The json extracted files are archived as well so data can be added from them for time machine purposes if such requirements emerge.
 
-##MODULE-1: 2026 ROSTER ROOTERS: v0.01
+## MODULE-1: 2026 ROSTER ROOTERS: v0.01
 
+Only the Red Sox and the Active (25) are being tracked in this initial build although the stucture to generalize to other teams is in place. The programming will expand to include the various roster change sizes and include the full 40 person renditions as well at a later point.
 
-Only the Red Sox and the Active (25) are being tracked in this initial build although the stucture to generalize to other teams is in place. Also, will expand to include the various roster change sizes and include the full 40 person renditions as well at a later point.
-v
+```python
 The Roster API call:
    statsapi.get('team_roster', {'teamId': team_id=111, 'rosterType': 'active'})
 
@@ -58,6 +58,7 @@ The naming convention for the json files is :
          19 is Hour
          03 is Minute
          49 is Second
+```
 
 Thus the files can be pulled at any time and staged for upload. 
 
