@@ -64,6 +64,7 @@ Thus the files can be pulled at any time and staged for upload.
 
 This build contains 5 python files and a /sandbox directory with 2 additional python files
 
+'''text
 /rosters/sandbox:
 db_create.py:
   Completely initializes the Postgres database depicted above
@@ -93,12 +94,14 @@ test_files.py:
     Copy this file and name it .env in your project root directory.
     You will need to place your specific password into this file for your postgres database and change any of the defaults you see in this file
     to match your particular database setup.
+```
 
+## NOTABLES:
 
-NOTABLES:
 The routine deduplicate_files(raw_data) in roster_loads.py will remove the duplicates from the staging directory 
 (/raw_data/daily_rosters) and leave only unique files.
 
+```python
         def deduplicate_files(raw_data):
             seen = {}    # checksum → first file with that content
             for f in sorted(Path(raw_data).glob('roster_snapshot_*.json')):
@@ -108,9 +111,11 @@ The routine deduplicate_files(raw_data) in roster_loads.py will remove the dupli
                     os.remove(f)
                 else:
                     seen[digest] = f
+```
 
 The main action sequence in roster_loads.py:
 
+```python
         proc_files = deduplicate_files(raw_data)
                 for f in proc_files:
                     with open(f, 'r') as file:
@@ -118,12 +123,13 @@ The main action sequence in roster_loads.py:
                         check_roster(roster)
                         upsert_data(roster)
                 archive_files(proc_files)
+```
 
-
-accesses every unique file in the staging directory (/raw_data/daily_rosters).  It checks the data to be sure it is valid, upserts it and then archives the .json to the archive directory (/raw_data/daily_rosters/archive.
+The main routine accesses every unique file in the staging directory (/raw_data/daily_rosters).  It checks the data to be sure it is valid, upserts it and then archives the .json to the archive directory (/raw_data/daily_rosters/archive.
 
 The SQL used for the upsert is: 
 
+```sql
  UPSERT_SQL = """
     INSERT INTO roster_snapshots (snapshot_date, team_id, player_id, player_name, position, status) 
     VALUES
@@ -131,10 +137,9 @@ The SQL used for the upsert is:
         %(player_name)s, %(position)s, %(status)s)
     ON CONFLICT (snapshot_date, team_id, player_id) DO NOTHING;
     """
+```
 
-As can be seen there is a daily grain here that is defaulting to the earliest databse update. 
-I will be changing this behavior in a subsequent update to use the latest revision in a day and versionize mutliple updates if they occur in the same day. 
-For now, we will keep the current setup as the Daily Grain is important to maintain for later operational use in analysis.
+As can be seen there is a daily grain here that is defaulting to the earliest database update.  I will be changing this behavior in a subsequent update to use the latest revision in a day and versionize mutliple updates if they occur in the same day. For now, we will keep the current setup as the Daily Grain is important to maintain for later operational use in analysis.
 
 
 
