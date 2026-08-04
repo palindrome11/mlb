@@ -1,0 +1,210 @@
+[
+  {
+    "snapshot_date": "2026-08-03",
+    "team_id": 111,
+    "player_id": 655316,
+    "player_name": "Andruw Monasterio",
+    "position": "SS",
+    "status": "Active"
+  },
+  {
+    "snapshot_date": "2026-08-03",
+    "team_id": 111,
+    "player_id": 678011,
+    "player_name": "Anthony Seigler",
+    "position": "2B",
+    "status": "Active"
+  },
+  {
+    "snapshot_date": "2026-08-03",
+    "team_id": 111,
+    "player_id": 547973,
+    "player_name": "Aroldis Chapman",
+    "position": "P",
+    "status": "Active"
+  },
+  {
+    "snapshot_date": "2026-08-03",
+    "team_id": 111,
+    "player_id": 678394,
+    "player_name": "Brayan Bello",
+    "position": "P",
+    "status": "Active"
+  },
+  {
+    "snapshot_date": "2026-08-03",
+    "team_id": 111,
+    "player_id": 702332,
+    "player_name": "Caleb Durbin",
+    "position": "3B",
+    "status": "Active"
+  },
+  {
+    "snapshot_date": "2026-08-03",
+    "team_id": 111,
+    "player_id": 665966,
+    "player_name": "Carlos Narv\u00e1ez",
+    "position": "C",
+    "status": "Active"
+  },
+  {
+    "snapshot_date": "2026-08-03",
+    "team_id": 111,
+    "player_id": 678882,
+    "player_name": "Ceddanne Rafaela",
+    "position": "CF",
+    "status": "Active"
+  },
+  {
+    "snapshot_date": "2026-08-03",
+    "team_id": 111,
+    "player_id": 657136,
+    "player_name": "Connor Wong",
+    "position": "C",
+    "status": "Active"
+  },
+  {
+    "snapshot_date": "2026-08-03",
+    "team_id": 111,
+    "player_id": 676477,
+    "player_name": "Garrett Whitlock",
+    "position": "P",
+    "status": "Active"
+  },
+  {
+    "snapshot_date": "2026-08-03",
+    "team_id": 111,
+    "player_id": 669711,
+    "player_name": "Greg Weissert",
+    "position": "P",
+    "status": "Active"
+  },
+  {
+    "snapshot_date": "2026-08-03",
+    "team_id": 111,
+    "player_id": 663330,
+    "player_name": "Jahmai Jones",
+    "position": "DH",
+    "status": "Active"
+  },
+  {
+    "snapshot_date": "2026-08-03",
+    "team_id": 111,
+    "player_id": 687562,
+    "player_name": "Jake Bennett",
+    "position": "P",
+    "status": "Active"
+  },
+  {
+    "snapshot_date": "2026-08-03",
+    "team_id": 111,
+    "player_id": 680776,
+    "player_name": "Jarren Duran",
+    "position": "LF",
+    "status": "Active"
+  },
+  {
+    "snapshot_date": "2026-08-03",
+    "team_id": 111,
+    "player_id": 663558,
+    "player_name": "Jovani Mor\u00e1n",
+    "position": "P",
+    "status": "Active"
+  },
+  {
+    "snapshot_date": "2026-08-03",
+    "team_id": 111,
+    "player_id": 686580,
+    "player_name": "Justin Slaten",
+    "position": "P",
+    "status": "Active"
+  },
+  {
+    "snapshot_date": "2026-08-03",
+    "team_id": 111,
+    "player_id": 807799,
+    "player_name": "Masataka Yoshida",
+    "position": "DH",
+    "status": "Active"
+  },
+  {
+    "snapshot_date": "2026-08-03",
+    "team_id": 111,
+    "player_id": 686765,
+    "player_name": "Nick Sogard",
+    "position": "3B",
+    "status": "Active"
+  },
+  {
+    "snapshot_date": "2026-08-03",
+    "team_id": 111,
+    "player_id": 663776,
+    "player_name": "Patrick Sandoval",
+    "position": "P",
+    "status": "Active"
+  },
+  {
+    "snapshot_date": "2026-08-03",
+    "team_id": 111,
+    "player_id": 801139,
+    "player_name": "Payton Tolle",
+    "position": "P",
+    "status": "Active"
+  },
+  {
+    "snapshot_date": "2026-08-03",
+    "team_id": 111,
+    "player_id": 624133,
+    "player_name": "Ranger Suarez",
+    "position": "P",
+    "status": "Active"
+  },
+  {
+    "snapshot_date": "2026-08-03",
+    "team_id": 111,
+    "player_id": 663853,
+    "player_name": "Romy Gonzalez",
+    "position": "DH",
+    "status": "Active"
+  },
+  {
+    "snapshot_date": "2026-08-03",
+    "team_id": 111,
+    "player_id": 670245,
+    "player_name": "Ryan Watson",
+    "position": "P",
+    "status": "Active"
+  },
+  {
+    "snapshot_date": "2026-08-03",
+    "team_id": 111,
+    "player_id": 543243,
+    "player_name": "Sonny Gray",
+    "position": "P",
+    "status": "Active"
+  },
+  {
+    "snapshot_date": "2026-08-03",
+    "team_id": 111,
+    "player_id": 594027,
+    "player_name": "Tyron Guerrero",
+    "position": "P",
+    "status": "Active"
+  },
+  {
+    "snapshot_date": "2026-08-03",
+    "team_id": 111,
+    "player_id": 575929,
+    "player_name": "Willson Contreras",
+    "position": "1B",
+    "status": "Active"
+  },
+  {
+    "snapshot_date": "2026-08-03",
+    "team_id": 111,
+    "player_id": 677800,
+    "player_name": "Wilyer Abreu",
+    "position": "RF",
+    "status": "Active"
+  }
+]
