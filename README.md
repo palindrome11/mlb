@@ -3,7 +3,7 @@ To read more on the API:  https://github.com/toddrob99/MLB-StatsAPI/wiki
 
 The first module is called Roster Rooters and is designed to keep track of the current 40 man rosters of all the teams as they change on a daily basis. The data pulled from the API is formatted in JSON files that are updated on a daily basis per team. The json files are pulled daily via a python script that processes an entry per player into a Postgres table called roster_snapshots and is built as such:
 
-```
+```sql
 CREATE TABLE IF NOT EXISTS roster_snapshots (
     snapshot_date  DATE         NOT NULL,
     team_id        INT          NOT NULL,
