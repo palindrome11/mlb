@@ -17,9 +17,13 @@ CREATE TABLE IF NOT EXISTS roster_snapshots (
 ```
 
 If you already are running a Postgres server then you will want to create a database in order to house the tables.
+
 For the puposes of this repo, I created a database calling it 'mlb' and used the default username (postgres)
+
 You will need to add your particular database name and user,port,host,password into your .env file or create them 
-in your OS Context by whatever means your OS allows environment variables to be instantiated. The python programs will read the .env file project root and populate it with your particular setup information. 
+in your OS Context by whatever means your OS allows environment variables to be instantiated. 
+
+The python programs will read the .env file project root and populate it with your particular setup information. 
 
 ```text 
 The sample_env file:
