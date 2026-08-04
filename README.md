@@ -19,22 +19,23 @@ CREATE TABLE IF NOT EXISTS roster_snapshots (
 If you already are running a Postgres server then you will want to create a database in order to house the tables.
 For the puposes of this repo, I created a database calling it 'mlb' and used the default username (postgres)
 You will need to add your particular database name and user,port,host,password into your .env file or create them 
-in your OS Context by whatever means your OS allows environment variables to be instantiated. The python programs
-will read the .env file
-project root and populate it with your particular setup information. 
- 
+in your OS Context by whatever means your OS allows environment variables to be instantiated. The python programs will read the .env file project root and populate it with your particular setup information. 
+
+```text 
 The sample_env file:
         # .env.example — copy to .env and fill in
         DB_HOST=localhost
         DB_NAME=mlb
         DB_USER=postgres
         DB_PASSWORD=changeme
+```
 
 The database is designed to allow for OLAP analysis of MLB roster transactions. 
-The json extracted files are archived as well so data can be added from them for time machine purposes
-if such requirements emerge.
 
-MODULE-1: 2026 ROSTER ROOTERS: v0.01
+The json extracted files are archived as well so data can be added from them for time machine purposes if such requirements emerge.
+
+##MODULE-1: 2026 ROSTER ROOTERS: v0.01
+
 
 Only the Red Sox and the Active (25) are being tracked in this initial build although the stucture to generalize to other teams is in place. Also, will expand to include the various roster change sizes and include the full 40 person renditions as well at a later point.
 v
