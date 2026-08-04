@@ -3,6 +3,7 @@ To read more on the API:  https://github.com/toddrob99/MLB-StatsAPI/wiki
 
 The first module is called Roster Rooters and is designed to keep track of the current 40 man rosters of all the teams as they change on a daily basis. The data pulled from the API is formatted in JSON files that are updated on a daily basis per team. The json files are pulled daily via a python script that processes an entry per player into a Postgres table called roster_snapshots and is built as such:
 
+```
 CREATE TABLE IF NOT EXISTS roster_snapshots (
     snapshot_date  DATE         NOT NULL,
     team_id        INT          NOT NULL,
@@ -13,13 +14,13 @@ CREATE TABLE IF NOT EXISTS roster_snapshots (
     loaded_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (snapshot_date, team_id, player_id)
 );
-"""
+```
 
 If you already are running a Postgres server then you will want to create a database in order to house the tables.
 For the puposes of this repo, I created a database calling it 'mlb' and used the default username (postgres)
 You will need to add your particular database name and user,port,host,password into your .env file or create them 
 in your OS Context by whatever means your OS allows environment variables to be instantiated. The python programs
-will read the .env file if you do not instantiate the operating system environment and you place it in the 
+will read the .env file
 project root and populate it with your particular setup information. 
  
 The sample_env file:
@@ -36,7 +37,7 @@ if such requirements emerge.
 MODULE-1: 2026 ROSTER ROOTERS: v0.01
 
 Only the Red Sox and the Active (25) are being tracked in this initial build although the stucture to generalize to other teams is in place. Also, will expand to include the various roster change sizes and include the full 40 person renditions as well at a later point.
-
+v
 The Roster API call:
    statsapi.get('team_roster', {'teamId': team_id=111, 'rosterType': 'active'})
 
