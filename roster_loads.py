@@ -3,6 +3,11 @@ import json
 import os
 from pathlib import Path
 import test_files   
+from dotenv import load_dotenv
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+RAW_DATA = os.path.join(BASE_DIR, "raw_data", "daily_rosters")
+ARCHIVE_PATH = os.path.join(RAW_DATA, "archive")
 
 def deduplicate_files(raw_data):
     seen = {}    # checksum → first file with that content
@@ -47,11 +52,13 @@ def upsert_data(roster):
     ON CONFLICT (snapshot_date, team_id, player_id) DO NOTHING;
     """
     
+    load_dotenv(os.path.join(BASE_DIR, '.env'))
+    
     conn = psycopg2.connect(
-        host='localhost',
-        dbname='mlb',
-        user='postgres',
-        password='postgres'
+        host=os.environ.get('DB_HOST','localhost'),
+        dbname=os.environ.get('DB_NAME','mlb'),
+        user=os.environ.get('DB_USER','postgres'),
+        password=os.environ.get('DB_PASSWORD') 
     )
     try:
         with conn:
@@ -60,38 +67,40 @@ def upsert_data(roster):
                 cur.execute("SELECT COUNT(*) FROM roster_snapshots WHERE snapshot_date = %s",
                             (roster[0]['snapshot_date'],))
                 print(f"Rows now in DB for that date: {cur.fetchone()[0]}")
+        print("roster_snapshot uploaded to database.")
     finally:
         conn.close()
-        print("roster_snapshot uploaded to database.")
 
 
 def archive_files(proc_files):
-    os.makedirs(archive_path, exist_ok=True)
+    os.makedirs(ARCHIVE_PATH, exist_ok=True)
     for f in proc_files:
-        archive_file = os.path.join(archive_path, f.name)
+        archive_file = os.path.join(ARCHIVE_PATH, f.name)
         os.rename(f, archive_file)
         print(f"Archived {f.name} to {archive_file}")
 
 
-archive_path = "/Users/cwconlon/@dev/mlb/raw_data/daily_rosters/archive"
-raw_data = "/Users/cwconlon/@dev/mlb/raw_data/daily_rosters"
-files = list(Path(raw_data).glob('roster_snapshot_*.json'))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-
-UPSERT_SQL = """
-INSERT INTO roster_snapshots (snapshot_date, team_id, player_id, player_name, position, status) 
-VALUES
-    (%(snapshot_date)s, %(team_id)s, %(player_id)s,
-     %(player_name)s, %(position)s, %(status)s)
-ON CONFLICT (snapshot_date, team_id, player_id) DO NOTHING;
-"""
-
-proc_files = deduplicate_files(raw_data)
-for f in proc_files:
-    with open(f, 'r') as file:
-        roster = json.load(file)
+if __name__ == '__main__':          
+    #files = list(Path(RAW_DATA).glob('roster_snapshot_*.json'))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+    proc_files = deduplicate_files(RAW_DATA)
+    loaded = []
+    for f in proc_files:
+        if f.stat().st_size == 0:
+            print(f"SKIPPING empty file: {f.name}")
+            continue
+        try:
+            with open(f, 'r') as file:
+                roster = json.load(file)
+        except json.JSONDecodeError as e:
+            print(f"SKIPPING malformed file {f.name}: {e}")
+            continue
+        if not roster:
+            print(f"SKIPPING file with no records: {f.name}")
+            continue
         check_roster(roster)
         upsert_data(roster)
-archive_files(proc_files)
+        loaded.append(f)
+    archive_files(loaded)
 
 
 

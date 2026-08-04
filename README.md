@@ -15,7 +15,21 @@ CREATE TABLE IF NOT EXISTS roster_snapshots (
 );
 """
 
-The database is being designed to allow for OLAP analysis of MLB roster transactions. 
+If you already are running a Postgres server then you will want to create a database in order to house the tables.
+For the puposes of this repo, I created a database calling it 'mlb' and used the default username (postgres)
+You will need to add your particular database name and user,port,host,password into your .env file or create them 
+in your OS Context by whatever means your OS allows environment variables to be instantiated. The python programs
+will read the .env file if you do not instantiate the operating system environment and you place it in the 
+project root and populate it with your particular setup information. 
+ 
+The sample_env file:
+        # .env.example — copy to .env and fill in
+        DB_HOST=localhost
+        DB_NAME=mlb
+        DB_USER=postgres
+        DB_PASSWORD=changeme
+
+The database is designed to allow for OLAP analysis of MLB roster transactions. 
 The json extracted files are archived as well so data can be added from them for time machine purposes
 if such requirements emerge.
 
@@ -66,6 +80,12 @@ team_ids.py:
 test_files.py:
     A utility to determine if two files are either a duplicate of each other or are 
     unique files. It does this by looking at the size and then the SHA256 Checksum of each file.
+
+.env_example:
+    Sample .env file for database credentials. 
+    Copy this file and name it .env in your project root directory.
+    You will need to place your specific password into this file for your postgres database and change any of the defaults you see in this file
+    to match your particular database setup.
 
 
 NOTABLES:
