@@ -45,9 +45,11 @@ Only the Red Sox and the Active (25) are being tracked in this initial build alt
 ```python
 The Roster API call:
    statsapi.get('team_roster', {'teamId': team_id=111, 'rosterType': 'active'})
+```
 
 Only retreiving data for team_id = 111 and the "active" roster (25 Person)
 
+```text
 The naming convention for the json files is :
   name = f"roster_snapshot_{team_id}_{timestamp}.json"
      So the files look like such: roster_snapshot_111_20260802190349
@@ -62,39 +64,26 @@ The naming convention for the json files is :
 
 Thus the files can be pulled at any time and staged for upload. 
 
-This build contains 5 python files and a /sandbox directory with 2 additional python files
+## Project Structure
 
-'''text
-/rosters/sandbox:
-db_create.py:
-  Completely initializes the Postgres database depicted above
-  as rosters_snapshots. Eventually place it in a utilities directory.
+This build contains 5 Python files and a `/sandbox` directory with 2 additional Python files.
 
- roster_play.py:
-   Strictly for testing and has some rudemtary and other tests already built.
-
-/
-api_get_roster.py:
-    calls the API as depicted above and places the .json file into a staging 
-    directory /raw_data in the file format depicted above.
-
-roster_loads.py:
-    Performs transformations on the .json files and loads the rosters_snapshots database via an upsert 
-    of the daily data file and then archives the .json files to the /raw_data/daily_rosters/archive subdirectory.
-
-team_ids.py:
-    Lists all the MLB teams and their team_ids
-
-test_files.py:
-    A utility to determine if two files are either a duplicate of each other or are 
-    unique files. It does this by looking at the size and then the SHA256 Checksum of each file.
-
-.env_example:
-    Sample .env file for database credentials. 
-    Copy this file and name it .env in your project root directory.
-    You will need to place your specific password into this file for your postgres database and change any of the defaults you see in this file
-    to match your particular database setup.
-```
+- **/rosters**
+  - **api_get_roster.py** — Calls the API as depicted above and places the .json file
+    into a staging directory `/raw_data` in the file format depicted above.
+  - **roster_loads.py** — Performs transformations on the .json files and loads the
+    `roster_snapshots` table via an upsert of the daily data file, then archives the
+    .json files to the `/raw_data/daily_rosters/archive` subdirectory.
+  - **team_ids.py** — Lists all the MLB teams and their team_ids.
+  - **test_files.py** — A utility to determine whether two files are duplicates or
+    unique. It does this by comparing size and then the SHA-256 checksum of each file.
+  - **.env.example** — Sample .env file for database credentials. Copy this file to
+    `.env` in your project root and set your Postgres password, changing any defaults
+    to match your database setup.
+- **/rosters/sandbox**
+  - **db_create.py** — Completely initializes the Postgres database depicted above
+    (`roster_snapshots`). Eventually move to a utilities directory.
+  - **roster_play.py** — Strictly for testing; has some rudimentary tests already built.
 
 ## NOTABLES:
 
