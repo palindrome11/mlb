@@ -66,24 +66,39 @@ Thus the files can be pulled at any time and staged for upload.
 
 ## Project Structure
 
-This build contains 5 Python files and a `/sandbox` directory with 2 additional Python files.
+This build contains 5 Python files and a `/rosters/sandbox` directory with 2 additional Python files.
 
-- **/rosters**
-  - **api_get_roster.py** — Calls the API as depicted above and places the .json file
-    into a staging directory `/raw_data` in the file format depicted above.
-  - **roster_loads.py** — Performs transformations on the .json files and loads the
-    `roster_snapshots` table via an upsert of the daily data file, then archives the
-    .json files to the `/raw_data/daily_rosters/archive` subdirectory.
+## Project Root
+- **mlb** 
+    ```text 
+   mkdir mlb
+    ```        
+    -- unzip the archive to an mlb directory you create for this project or choose your own project root and unarchive. Tte following notes are based on the root directory of the project being at `./mlb` 
+
+## Programs & Scripts 
+
+- **/**
+  - **api_get_roster.py** — Calls the API as depicted above and places the .json file(s) into a staging directory `/raw_data` in the file format depicted above.
+  - **roster_loads.py** — Performs transformations on the .json files and loads the `roster_snapshots` table via an upsert of the daily data file, then archives the .json files to the `/raw_data/daily_rosters/archive` subdirectory.
   - **team_ids.py** — Lists all the MLB teams and their team_ids.
-  - **test_files.py** — A utility to determine whether two files are duplicates or
-    unique. It does this by comparing size and then the SHA-256 checksum of each file.
-  - **.env.example** — Sample .env file for database credentials. Copy this file to
-    `.env` in your project root and set your Postgres password, changing any defaults
-    to match your database setup.
+  - **test_files.py** — A utility to determine whether two files are duplicates or unique. It does this by comparing size and then the SHA-256 checksum of each file.
+  - **.env.example** — Sample .env file for database credentials. Copy this file to `.env` in your project root and set your Postgres password, changing any defaults
+  to match your database setup.
+  - **crontab_entries** - Sample crontab entries:
+  - 1.  Executes the api_get_roster.py in the background and everyday. It downloads the daily json file(s) to the staging directory  `/raw_data`
+  - 2. Executes the `roster_loads.py` in the background about 30 minutes after the api retrieval, Rhus script upserts the .json data to the Postgres database `roster_snapshots` and then moves the original .json file(s) to `raw_data\archive`  
+  
 - **/rosters/sandbox**
   - **db_create.py** — Completely initializes the Postgres database depicted above
     (`roster_snapshots`). Eventually move to a utilities directory.
   - **roster_play.py** — Strictly for testing; has some rudimentary tests already built.
+
+## Data Directories 
+  - **/raw_data**
+  - **/raw_data/archive** 
+
+## Log Directories   
+  - **/logs**
 
 ## NOTABLES:
 
