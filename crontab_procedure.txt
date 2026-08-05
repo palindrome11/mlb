@@ -1,0 +1,21 @@
+#setup loag directory
+mkdir -p /Users/cwconlon/@dev/mlb/logs
+
+#go into crotab table to edit
+EDITOR=vi crontab -e
+#in vi:
+#  go to INSERT mode
+#   :i
+#    go to last line 
+#    cut/paste the crontab_entries from the file crontab_entries
+#    save teh crontab
+#   :wq
+
+crontab -l 
+
+#check the logs to see if it executes:
+
+tail -20 logs/capture.log logs/load.log
+ls -al raw_data/daily_rosters/
+ls raw_data/daily_rosters/archive/
+

@@ -8,6 +8,9 @@ from dotenv import load_dotenv
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 RAW_DATA = os.path.join(BASE_DIR, "raw_data", "daily_rosters")
 ARCHIVE_PATH = os.path.join(RAW_DATA, "archive")
+ACTIVE_ROSTER_SIZE = 26  # Expected number of players in the active roster
+DH_ACTIVE_ROSTER_SIZE = 27  # Expected number of players in the active roster with DH
+
 
 def deduplicate_files(raw_data):
     seen = {}    # checksum → first file with that content
@@ -38,11 +41,19 @@ def deduplicate_files_2(raw_data):
     for upload_file in upload_files:
         print(upload_file)
 
-def check_roster(roster):
-    print(type(roster))       # <class 'list'> → list of dicts
-    print(len(roster))        # 26 players in the Red Sox roster
-    print(roster[0])          # first player in the roster list
-
+def check_roster_size(roster):
+    #print(type(roster))       # <class 'list'> → list of dicts
+    #print(len(roster))        # 26 players in the Red Sox roster
+    #print(roster[0])          # first player in the roster list
+    roster_size=len(roster)
+    if roster_size == ACTIVE_ROSTER_SIZE:
+        #keys = roster[0].keys()
+        #print(f"Keys in roster dict: {keys}")
+        return roster_size
+    else:
+        print(f"Unexpected roster size {roster_size}. Expected {ACTIVE_ROSTER_SIZE}.")
+        return roster_size
+    
 def upsert_data(roster):
     UPSERT_SQL = """
     INSERT INTO roster_snapshots (snapshot_date, team_id, player_id, player_name, position, status) 
@@ -97,10 +108,20 @@ if __name__ == '__main__':
         if not roster:
             print(f"SKIPPING file with no records: {f.name}")
             continue
-        check_roster(roster)
-        upsert_data(roster)
-        loaded.append(f)
-    archive_files(loaded)
+        roster_size = check_roster_size(roster)
+        if roster_size == ACTIVE_ROSTER_SIZE:
+            upsert_data(roster)
+            loaded.append(f)
+            archive_files(loaded)
+        if roster_size == DH_ACTIVE_ROSTER_SIZE:    
+            upsert_data(roster)
+            loaded.append(f)
+            archive_files(loaded)
+    
+        
+  
+    
+    
 
 
 
