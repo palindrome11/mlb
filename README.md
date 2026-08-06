@@ -1,7 +1,7 @@
 In this project, MLB-StatsAPI serves as the extraction point for various Modules.
 To read more on the API:  https://github.com/toddrob99/MLB-StatsAPI/wiki
 
-The first module is called Roster Rooters and is designed to keep track of the current 40 man rosters of all the teams as they change on a daily basis. The data pulled from the API is formatted in JSON files that are updated on a daily basis per team. The json files are pulled daily via a python script that processes an entry per player into a Postgres table called roster_snapshots and is built as such:
+The first module is called Roster Rooters and is designed to keep track of the current active rosters (25/26) of all the teams as they change on a daily basis. The data pulled from the API is formatted in JSON files that are updated on a daily basis per team. The json files are pulled daily via a python script that processes an entry per player into a Postgres table called roster_snapshots and is built as such:
 
 ```sql
 CREATE TABLE IF NOT EXISTS roster_snapshots (
@@ -20,10 +20,9 @@ If you already are running a Postgres server then you will want to create a data
 
 For the puposes of this repo, I created a database calling it 'mlb' and used the default username (postgres)
 
-You will need to add your particular database name and user,port,host,password into your .env file or create them 
-in your OS Context by whatever means your OS allows environment variables to be instantiated. 
+You will need to add your particular database name and user,port,host,password into your .env file or create them in your OS Context by whatever means your OS allows environment variables to be instantiated. 
 
-The python programs will read the .env file project root and populate it with your particular setup information. 
+The python programs will read the .env file in the project root for the database connection if the operating system environment variable of the same name are not instantiated. So populate the Postgres info  with your particular setup information. 
 
 ```text 
 The sample_env file:
@@ -40,7 +39,7 @@ The json extracted files are archived as well so data can be added from them for
 
 ## MODULE-1: 2026 ROSTER ROOTERS: v0.01
 
-Only the Red Sox and the Active (25) are being tracked in this initial build although the stucture to generalize to other teams is in place. The programming will expand to include the various roster change sizes and include the full 40 person renditions as well at a later point.
+Only the Red Sox and the Active (25)(26) are being tracked in this initial build although the stucture to generalize to other teams is in place. The programming will expand to include the various roster change sizes and include the full 40 person renditions as well at a later point.
 
 ```python
 The Roster API call:
@@ -86,12 +85,24 @@ This build contains 5 Python files and a `/rosters/sandbox` directory with 2 add
   to match your database setup.
   - **crontab_entries** - Sample crontab entries:
   - 1.  Executes the api_get_roster.py in the background and everyday. It downloads the daily json file(s) to the staging directory  `/raw_data`
-  - 2. Executes the `roster_loads.py` in the background about 30 minutes after the api retrieval, Rhus script upserts the .json data to the Postgres database `roster_snapshots` and then moves the original .json file(s) to `raw_data\archive`  
-  
+  - 2. Executes the `roster_loads.py` in the background about 30 minutes after the api retrieval and upserts the json data to the Postgres database `roster_snapshots` and then moves the original .json file(s) to `raw_data\archive`  
+
+  - **bash_control_scripts**
+    - rup_ls.sh ALIAS: roster_run_result or rr
+      - show the result of last scheduled stage and load 
+    - rup_run_load.sh ALIAS: roster_load
+      - run the database load from the command line 
+    - rup_run_load_ls.sh ALIAS: roster_load_list
+      - see the results of the database load
+    - rup_run_stage.sh ALIAS: roster_stage 
+      - run the json file staging from the command line
+    - rup_run_stage_ls.sh ALIAS: roster_stage_list
+      - see the results of the json stage runs
+
 - **/rosters/sandbox**
   - **db_create.py** — Completely initializes the Postgres database depicted above
-    (`roster_snapshots`). Eventually move to a utilities directory.
   - **roster_play.py** — Strictly for testing; has some rudimentary tests already built.
+  - **bash_scripts_to_commands.sh** - Turns the BASH scripts created to control and monitor the system into commands that can be run from the command line.  
 
 ## Data Directories 
   - **/raw_data**
@@ -100,7 +111,7 @@ This build contains 5 Python files and a `/rosters/sandbox` directory with 2 add
 ## Log Directories   
   - **/logs**
 
-## NOTABLES:
+## NOTES:
 
 The routine deduplicate_files(raw_data) in roster_loads.py will remove the duplicates from the staging directory 
 (/raw_data/daily_rosters) and leave only unique files.
