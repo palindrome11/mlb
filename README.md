@@ -88,7 +88,7 @@ This build contains 5 Python files and a `/rosters/sandbox` directory with 2 add
   - 2. Executes the `roster_loads.py` in the background about 30 minutes after the api retrieval and upserts the json data to the Postgres database `roster_snapshots` and then moves the original .json file(s) to `raw_data\archive`  
 
   - **bash_control_scripts**
-    - rup_ls.sh ALIAS: roster_run_result or rr
+    - rup_ls.sh ALIAS: roster_run_result 
       - show the result of last scheduled stage and load 
     - rup_run_load.sh ALIAS: roster_load
       - run the database load from the command line 

@@ -1,2 +1,2 @@
-0 6 * * * cd /Users/cwconlon/@dev/mlb && date >> /Users/cwconlon/@dev/mlb/logs/capture.log && /Users/cwconlon/@dev/mlb/.venv/bin/python api_get_roster.py >> /Users/cwconlon/@dev/mlb/logs/capture.log 2>&1
-30 6 * * * cd /Users/cwconlon/@dev/mlb && date >> /Users/cwconlon/@dev/mlb/logs/load.log && /Users/cwconlon/@dev/mlb/.venv/bin/python roster_loads.py >> /Users/cwconlon/@dev/mlb/logs/load.log 2>&1
+0 8 * * * cd /Users/cwconlon/@dev/mlb && date >> /Users/cwconlon/@dev/mlb/logs/capture.log && /Users/cwconlon/@dev/mlb/.venv/bin/python api_get_roster.py >> /Users/cwconlon/@dev/mlb/logs/capture.log 2>&1
+30 8 * * * cd /Users/cwconlon/@dev/mlb && date >> /Users/cwconlon/@dev/mlb/logs/load.log && /Users/cwconlon/@dev/mlb/.venv/bin/python roster_loads.py >> /Users/cwconlon/@dev/mlb/logs/load.log 2>&1
