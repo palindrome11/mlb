@@ -1,15 +1,12 @@
 from datetime import datetime, date
 import os, sys
+from pathlib import Path
 import psycopg2
 from dotenv import load_dotenv
+from paths import PROJECT_DIR, RAW_DATA, ARCHIVE_PATH, SQL_DIR, ENV_FILE 
 
 def upsert_roster_snapshot_data(roster):
-
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    PROJECT_DIR  = os.path.dirname(BASE_DIR)
-   
-    loaded = load_dotenv(os.path.join(PROJECT_DIR, '.env'))
-
+    
     UPSERT_SQL = """
     INSERT INTO roster_snapshots (snapshot_date, team_id, player_id, player_name, position, status) 
     VALUES
@@ -17,13 +14,12 @@ def upsert_roster_snapshot_data(roster):
         %(player_name)s, %(position)s, %(status)s)
     ON CONFLICT (snapshot_date, team_id, player_id) DO NOTHING;
     """
-    
-    load_dotenv(os.path.join(BASE_DIR, '.env'))
-    
+  
     conn = psycopg2.connect(
         host=os.environ.get('DB_HOST','localhost'),
-        dbname=os.environ.get('DB_NAME','mlb'),
-        user=os.environ.get('DB_USER','postgres'),
+        port=os.environ.get('DB_PORT', 5432),
+        dbname=os.environ.get('DB_NAME'),
+        user=os.environ.get('DB_USER'),
         password=os.environ.get('DB_PASSWORD') 
     )
     try:

@@ -1,4 +1,13 @@
 {
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+    "python.terminal.activateEnvironment": true,
+    "python.envFile": "${workspaceFolder}/.env",
+    "terminal.integrated.env.osx": {
+        "PYTHONPATH": "${workspaceFolder}"
+    },
+    "files.exclude": {
+        "**/__pycache__": true
+    },
     "sqltools.connections": [
         {
             "ssh": "Disabled",
@@ -7,9 +16,9 @@
             "port": 5432,
             "askForPassword": true,
             "driver": "PostgreSQL",
-            "name": "mlb",
-            "database": "mlb",
-            "username": "postgres"
+            "name": "mlb_dev",
+            "database": "mlb_dev",
+            "username": "mlb_dev_user"
         }
     ]
 }

@@ -2,9 +2,7 @@ import json
 import statsapi
 from datetime import datetime, date
 import os
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-RAW_DATA = os.path.join(BASE_DIR, "raw_data", "daily_rosters")
+from paths import RAW_DATA
 
 def capture_roster(team_id):
     snapshot_date = date.today().isoformat()

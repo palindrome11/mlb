@@ -1,7 +1,9 @@
-import psycopg2
-from dotenv import load_dotenv
 import os
+import sys
 
+import psycopg2
+
+import paths  # noqa: F401 — imported for its .env loading side effect
 
 CREATE_SQL = """
 CREATE TABLE IF NOT EXISTS roster_snapshots (
@@ -16,26 +18,25 @@ CREATE TABLE IF NOT EXISTS roster_snapshots (
 );
 """
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_DIR  = os.path.dirname(BASE_DIR)
 
-loaded = load_dotenv(os.path.join(PROJECT_DIR, '.env'))
-#print("BASE_DIR:", BASE_DIR)
-#print("PROJECT_DIR:", PROJECT_DIR)
-#print(".env found:", loaded)
-#print("DB_USER:", os.environ.get('DB_USER'))
-#print("DB_PASSWORD set:", os.environ.get('DB_PASSWORD') is not None)
-    
-conn = psycopg2.connect(
-    host=os.environ.get('DB_HOST','localhost'),
-    dbname=os.environ.get('DB_NAME','mlb'),
-    user=os.environ.get('DB_USER','postgres'),
-    password=os.environ.get('DB_PASSWORD') 
-)
+def create_roster_snapshots():
+    conn = psycopg2.connect(
+        host=os.environ.get('DB_HOST', 'localhost'),
+        port=os.environ.get('DB_PORT', 5432),
+        dbname=os.environ['DB_NAME'],
+        user=os.environ['DB_USER'],
+        password=os.environ['DB_PASSWORD'],
+    )
+    try:
+        with conn, conn.cursor() as cur:
+            cur.execute(CREATE_SQL)
+    finally:
+        conn.close()
+    print("roster_snapshots table ready.")
 
-with conn:
-    with conn.cursor() as cur:
-        cur.execute(CREATE_SQL)
 
-conn.close()
-print("roster_snapshots Table ready.")
+if __name__ == '__main__':
+    print(f"Python: {sys.executable}")
+    print(f"Database: {os.environ.get('DB_NAME')}")
+    print("uncomment create_roster_snapshots_to_run or exec as module")
+    #create_roster_snapshots()
