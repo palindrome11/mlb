@@ -3,14 +3,7 @@ import os
 from pathlib import Path
 import psycopg2
 from dotenv import load_dotenv
-
-def project_root(marker='.git'):
-    for parent in Path(__file__).resolve().parents:
-        if (parent / marker).exists():
-            return parent
-    raise RuntimeError(f"No {marker} found above {__file__}")
-
-PROJECT_DIR = project_root()
+from paths import PROJECT_DIR, RAW_DATA, ARCHIVE_PATH, SQL_DIR, ENV_FILE 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 #PROJECT_DIR  = os.path.dirname(BASE_DIR)

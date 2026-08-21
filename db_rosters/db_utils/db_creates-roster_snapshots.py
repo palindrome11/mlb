@@ -34,9 +34,12 @@ def create_roster_snapshots():
         conn.close()
     print("roster_snapshots table ready.")
 
-
-if __name__ == '__main__':
+def main():
     print(f"Python: {sys.executable}")
     print(f"Database: {os.environ.get('DB_NAME')}")
-    print("uncomment create_roster_snapshots_to_run or exec as module")
+    print("This is the create_roster snapshot Python module. You must adjust the source vode to exec as a standalone program")
     #create_roster_snapshots()
+
+
+if __name__ == '__main__':
+    main()

@@ -4,8 +4,8 @@ from pathlib import Path
 import paths
 
 from bus_rosters.roster_u import get_roster_player_ids
-from people.people_api import get_player_info
-from people.people_db import upsert_player_data
+from api_people.people_api import get_player_info
+from db_people.people_db import upsert_player_data
 
 def main():
     #Get the new players from the last roster database load

@@ -4,7 +4,7 @@ from datetime import datetime, date
 import os, sys
 from pathlib import Path
 from paths import PROJECT_DIR, RAW_DATA, ARCHIVE_PATH, SQL_DIR, ENV_FILE 
-from bus_rosters.rosters_api import capture_roster
+from api_rosters.rosters_api import capture_roster
 
 
 def main():

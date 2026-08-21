@@ -4,7 +4,7 @@ import sys
 
 from paths import RAW_DATA, ARCHIVE_PATH
 from bus_rosters.roster_u import deduplicate_files, archive_files
-from bus_rosters.rosters_db import upsert_roster_snapshot_data
+from db_rosters.rosters_db import upsert_roster_snapshot_data
 
 FILE_GLOB = 'roster_snapshot_*.json'
 
