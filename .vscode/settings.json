@@ -20,5 +20,11 @@
             "database": "mlb_dev",
             "username": "mlb_dev_user"
         }
-    ]
+    ],
+    "sqltools.format": {
+        "language": "postgresql"
+    },
+    "files.associations": {
+        "*.sql": "sql"
+    }
 }
