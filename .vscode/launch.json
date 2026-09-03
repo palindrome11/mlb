@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "rosters_stage",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "basecamp.rosters_stage",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "roster_loads",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "basecamp.roster_loads",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    }
+  ]
+}

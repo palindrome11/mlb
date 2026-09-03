@@ -1,29 +1,34 @@
 from datetime import datetime, date
 import os, sys
+from pathlib import Path
 import psycopg2
 from dotenv import load_dotenv
+from paths import PROJECT_DIR, RAW_DATA, ARCHIVE_PATH, SQL_DIR, ENV_FILE 
 
 def upsert_roster_snapshot_data(roster):
-
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    PROJECT_DIR  = os.path.dirname(BASE_DIR)
-   
-    loaded = load_dotenv(os.path.join(PROJECT_DIR, '.env'))
-
+    
     UPSERT_SQL = """
-    INSERT INTO roster_snapshots (snapshot_date, team_id, player_id, player_name, position, status) 
+    INSERT INTO roster_snapshots 
+       (snapshot_date, team_id, player_id, player_name, position, status) 
     VALUES
         (%(snapshot_date)s, %(team_id)s, %(player_id)s,
         %(player_name)s, %(position)s, %(status)s)
-    ON CONFLICT (snapshot_date, team_id, player_id) DO NOTHING;
-    """
-    
-    load_dotenv(os.path.join(BASE_DIR, '.env'))
-    
+    ON CONFLICT (snapshot_date, team_id, player_id) DO UPDATE SET
+        player_name = EXCLUDED.player_name,
+        position    = EXCLUDED.position,
+        status      = EXCLUDED.status,
+        version     = roster_snapshots.version + 1,
+        updated_at  = now()
+    WHERE roster_snapshots.player_name IS DISTINCT FROM EXCLUDED.player_name
+       OR roster_snapshots.position    IS DISTINCT FROM EXCLUDED.position
+       OR roster_snapshots.status      IS DISTINCT FROM EXCLUDED.status;
+    """   
+
     conn = psycopg2.connect(
         host=os.environ.get('DB_HOST','localhost'),
-        dbname=os.environ.get('DB_NAME','mlb'),
-        user=os.environ.get('DB_USER','postgres'),
+        port=os.environ.get('DB_PORT', 5432),
+        dbname=os.environ.get('DB_NAME'),
+        user=os.environ.get('DB_USER'),
         password=os.environ.get('DB_PASSWORD') 
     )
     try:
