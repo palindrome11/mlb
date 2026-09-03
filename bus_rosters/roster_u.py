@@ -1,11 +1,13 @@
-import os
+import os,sys
 from pathlib import Path
-
+from datetime import datetime, date
 import psycopg2
+import json
 
-from paths import PROJECT_DIR          # importing paths also loads .env
+from paths import PROJECT_DIR, RAW_DATA, ARCHIVE_PATH, SQL_DIR, ENV_FILE 
+
 import utils.test_files_match as test_files
-
+from api_rosters.rosters_api import capture_roster_by_date
 
 def get_roster_player_ids():
     """Player IDs present in roster_snapshots but missing from dim_players."""
@@ -33,7 +35,6 @@ def get_roster_player_ids():
 
     return [row[0] for row in rows]
 
-
 def deduplicate_files(raw_data, file_glob):
     seen = {}
     for f in sorted(Path(raw_data).glob(file_glob)):
@@ -48,7 +49,6 @@ def deduplicate_files(raw_data, file_glob):
     print(f"Unique files to upload: {[f.name for f in upload_files]}")
     return upload_files
 
-
 def archive_files(proc_files, archive_path):
     archive_path.mkdir(parents=True, exist_ok=True)
     for f in proc_files:
@@ -57,6 +57,16 @@ def archive_files(proc_files, archive_path):
         print(f"Archived {f.name} to {target}")
 
 
-if __name__ == '__main__':        
+def get_snapshot(snapshot_date):
     pass
+
+
+def main():
+    print(f"Python: {sys.executable}")
+    print(f"Database: {os.environ.get('DB_NAME')}")
+
+
+if __name__ == '__main__':
+    main()      
+
 
