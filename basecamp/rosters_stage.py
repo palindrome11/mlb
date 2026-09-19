@@ -1,6 +1,6 @@
 import json
 import statsapi
-from datetime import datetime, date
+from datetime import datetime, date, timezone
 import os, sys
 from pathlib import Path
 from paths import PROJECT_DIR, RAW_DATA, ARCHIVE_PATH, SQL_DIR, ENV_FILE 
@@ -16,6 +16,8 @@ def main():
     for team_id in selected_teams:
         roster = capture_roster(team_id)
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        ##Marker for the future when we move all to UTC timestamps
+        #tz_timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S")
         fname = f"roster_snapshot_{team_id}_{timestamp}.json"
         fpath = RAW_DATA / fname
         with open(fpath, 'w') as f:

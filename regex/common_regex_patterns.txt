@@ -1,0 +1,42 @@
+These regex patterns/statements are really Unix based and useful at the shell or within
+programs like BBedit that allow REGEX Find/Replace
+
+---
+RECORD TO ISOLATE WITH THE REGEX:
+
+{
+    "snapshot_date": "2026-09-16",
+    "team_id": "111",
+    "player_id": 676979,
+    "player_name": "Garrett Crochet",
+    "position": "P",
+    "status": "Injured 60-Day"
+  },
+
+
+REGEX:
+\{[^{}]*"status": "Injured 60-Day"[^{}]*\},?\n?
+
+EXPLANATION:
+
+{ — a literal open brace. Escaped because bare { in PCRE starts a repetition count like {3} or {2,5}. 
+BBEdit would either error or interpret it oddly.
+
+[^{}]* — a character class with ^ inside meaning negated: any character that is not a brace, zero or more times. 
+This is the load-bearing piece. 
+
+Plain .* would happily run past the closing } of this record, 
+through the next record, and stop at the last "Injured 60-Day" in the file — swallowing everything between. 
+
+Forbidding braces means the match physically cannot escape the object it started in.
+
+"status": "Injured 60-Day" — literal text. Nothing special in it.
+
+[^{}]*\} — same guard, then the closing brace.
+
+,? — the preceding comma is optional. ? means zero or one.
+
+\n? — optional newline, so deleting the match doesn't leave a blank line.
+
+----
+
