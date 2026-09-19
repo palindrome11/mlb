@@ -7,6 +7,6 @@ def get_game_box(game_id):
     return(data)
 
 
-game_id = 70000
+game_id = 824708
 data=get_game_box(game_id)
 print(data)

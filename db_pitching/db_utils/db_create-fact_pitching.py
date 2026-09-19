@@ -5,31 +5,35 @@ import paths  # noqa: F401 — imported for its .env loading side effect
 
 def fact_pitching():
     CREATE_SQL = """
-    CREATE TABLE fact_pitching (
-    game_pk        INTEGER NOT NULL REFERENCES dim_games(game_pk),
-    player_id      INTEGER NOT NULL REFERENCES dim_players(player_id),
-    team_id        INTEGER NOT NULL REFERENCES dim_teams(team_id),
-    is_starter     BOOLEAN,
-    outs           SMALLINT,        -- store outs, not "innings pitched"
-    batters_faced  SMALLINT,
-    pitches        SMALLINT,
-    strikes        SMALLINT,
-    hits           SMALLINT,
-    runs           SMALLINT,
-    earned_runs    SMALLINT,
-    home_runs      SMALLINT,
-    walks          SMALLINT,
-    intentional_walks SMALLINT,
-    strikeouts     SMALLINT,
-    hit_batsmen    SMALLINT,
-    wild_pitches   SMALLINT,
-    balks          SMALLINT,
-    inherited_runners SMALLINT,
-    inherited_runners_scored SMALLINT,
-    decision       CHAR(1),         -- W / L / S / H / NULL
-    loaded_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+    CREATE TABLE IF NOT EXISTS fact_pitching (
+    game_pk                  integer NOT NULL REFERENCES dim_games(game_pk),
+    player_id                integer NOT NULL,
+    team_id                  integer NOT NULL REFERENCES dim_teams(team_id),
+    is_starter               boolean NOT NULL DEFAULT false,
+    outs_recorded            smallint NOT NULL DEFAULT 0,  -- 19 = 6.1 IP
+    batters_faced            smallint NOT NULL DEFAULT 0,
+    hits                     smallint NOT NULL DEFAULT 0,
+    runs                     smallint NOT NULL DEFAULT 0,
+    earned_runs              smallint NOT NULL DEFAULT 0,
+    home_runs                smallint NOT NULL DEFAULT 0,
+    walks                    smallint NOT NULL DEFAULT 0,
+    intentional_walks        smallint NOT NULL DEFAULT 0,
+    hit_batsmen              smallint NOT NULL DEFAULT 0,
+    strikeouts               smallint NOT NULL DEFAULT 0,
+    wild_pitches             smallint NOT NULL DEFAULT 0,
+    balks                    smallint NOT NULL DEFAULT 0,
+    pitches_thrown           smallint NOT NULL DEFAULT 0,
+    strikes                  smallint NOT NULL DEFAULT 0,
+    inherited_runners        smallint NOT NULL DEFAULT 0,
+    inherited_runners_scored smallint NOT NULL DEFAULT 0,
+    is_win                   boolean NOT NULL DEFAULT false,
+    is_loss                  boolean NOT NULL DEFAULT false,
+    is_save                  boolean NOT NULL DEFAULT false,
+    holds                    smallint NOT NULL DEFAULT 0,
+    blown_saves              smallint NOT NULL DEFAULT 0,
+    loaded_at                timestamptz NOT NULL DEFAULT now(),
     PRIMARY KEY (game_pk, player_id)
-)
+);
 """
     conn = psycopg2.connect(
         host=os.environ.get('DB_HOST', 'localhost'),

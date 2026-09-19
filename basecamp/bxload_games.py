@@ -1,12 +1,19 @@
 import os, sys
+# from certifi.__main__ import args
+# from dotenv import parser
 import psycopg2
 import time
 import paths
+
+import argparse
 
 from api_boxscore.boxscore_api import capture_boxscore
 from db_boxscore.raw_box_db import upsert_raw_box_data
 
 FETCH_DELAY = 1.0
+
+def comma_separated_integers(value):
+    return [int(item) for item in value.split(',')]
 
 def get_connection():
     return psycopg2.connect(
@@ -39,21 +46,27 @@ def get_games_missing_boxscores(cur):
 #    return cur.fetchone()[0]
 
 def main():
-    explicit_pks = [int(arg) for arg in sys.argv[1:]]
+      
+    parser = argparse.ArgumentParser(description="Process a group of game ids.")
+    parser.add_argument(
+        '--game_ids', 
+        type=comma_separated_integers, 
+        required=True,
+        help='Comma-separated numbers (e.g., 1,2,3,4)'
+    )
 
+    args = parser.parse_args()
+    print("Parsed list:", args.game_ids)
+    explicit_pks=args.game_ids
+    total_games_needing_boxcores = len(explicit_pks)
+           
     conn = get_connection()
     inserted = refreshed = failed = 0
     
+    
     try:
         with conn.cursor() as cur:
-            if explicit_pks:
-                game_pks = explicit_pks
-                print(f"refreshing {len(game_pks)} game(s)")
-            else: 
-                game_pks = get_games_missing_boxscores(cur)
-                total_games_needing_boxcores = len(game_pks)
-                print(f"games needing boxscores: {len(game_pks)}")
-            for i , game_pk in enumerate(game_pks):
+            for i , game_pk in enumerate(explicit_pks):
                 if i:
                     time.sleep(FETCH_DELAY)
                 try:

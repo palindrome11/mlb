@@ -5,12 +5,13 @@ import json
 import os,sys
 import paths
 
-def capture_schedule(start_date, end_date, sport_id=1):
+def capture_schedule(start_date, end_date, sport_id=1, game_type=None):
     """Return the raw schedule payload for a date range (YYYY-MM-DD strings)."""
     return statsapi.get('schedule', {
         'sportId': sport_id,
         'startDate': start_date,
         'endDate': end_date,
+        'gameTypes': game_type,
     })
 
 

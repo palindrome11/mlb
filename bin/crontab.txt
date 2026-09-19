@@ -1,0 +1,4 @@
+# bin/crontab.txt
+45 8-23 * * * /Users/cwconlon/@dev/mlb/bin/run_stage.sh >> /Users/cwconlon/@dev/mlb/logs/daily.log 2>&1
+50 8-23 * * * /Users/cwconlon/@dev/mlb/bin/run_loads.sh >> /Users/cwconlon/@dev/mlb/logs/daily.log 2>&1
+01 8-23 * * * /Users/cwconlon/@dev/mlb/bin/todays_games_load.sh >> /Users/cwconlon/@dev/mlb/logs/daily.log 2>&1

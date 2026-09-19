@@ -41,3 +41,43 @@ def upsert_roster_snapshot_data(roster):
         print("roster_snapshot uploaded to database.")
     finally:
         conn.close()
+
+def insert_roster_capture_data(capture_info, players):
+    print(capture_info)
+    INSERT_SQL = """
+    INSERT INTO roster_captures
+    (captured_at, captured_at_inferred, team_id, roster_type, source_file, player_count)
+    VALUES
+    (%(captured_at)s, %(captured_at_inferred)s, %(team_id)s, %(roster_type)s, %(source_file)s, %(player_count)s)
+    returning capture_id;
+    """
+    INSERT_PLAYER_SQL = """
+    INSERT INTO roster_capture_members
+    (capture_id, player_id, player_name, position, status)
+    VALUES
+    (%(capture_id)s, %(player_id)s, %(player_name)s, %(position)s, %(status)s)
+    """
+    
+    #print(players)
+      
+    conn = psycopg2.connect(
+        host=os.environ.get('DB_HOST','localhost'),
+        port=os.environ.get('DB_PORT', 5432),
+        dbname=os.environ.get('DB_NAME'),
+        user=os.environ.get('DB_USER'),
+        password=os.environ.get('DB_PASSWORD') 
+    )
+    try:
+        with conn , conn.cursor() as cur:
+            cur.execute(INSERT_SQL, capture_info)
+            capture_id = cur.fetchone()[0]   
+            print("roster_capture uploaded to database.")
+            # Now insert the players
+            for player in players:
+                player['capture_id'] = capture_id
+                cur.execute(INSERT_PLAYER_SQL, player   )
+            print(f"{len(players)} players added to roster_capture_members")    
+
+
+    finally:
+        conn.close()
