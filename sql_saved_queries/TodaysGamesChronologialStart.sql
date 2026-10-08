@@ -8,7 +8,8 @@ WITH early_to_late_games AS
   ,to_char(g.game_datetime AT TIME ZONE v.time_zone_id, 'FMHH12:MI AM') AS local_start
   ,v.time_zone_id AS timezone
   ,v.name AS venue
-  ,CONCAT(v.city, ' , ', v.state, NULL) AS locale
+  ,CONCAT(v.city, ',', v.state, NULL) AS locale
+  ,coded_game_state AS coded_game_state
   ,row_number() OVER (ORDER BY g.game_datetime) AS early_to_late
 FROM dim_games g
 JOIN dim_teams ht ON ht.team_id = g.home_team_id
@@ -25,5 +26,7 @@ game_pk
 ,timezone
 ,venue
 ,locale
-FROM early_to_late_games
+,coded_game_state
+,to_char(now() AT TIME ZONE timezone,'FMHH12:MI AM') AS current_game_local_time
+FROM early_to_late_games 
 ORDER BY early_to_late
