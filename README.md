@@ -4,17 +4,20 @@
 
 This project is designed to expose player, game, and team data available from multiple sources with the core reference being the publicly available MLB-StatsAPI (https://github.com/toddrob99/MLB-StatsAPI/wiki) maintained by Major League Baseball (MLB).
 
-The programming is designed with the goal of organizing and exposing the data from roster updates and game by game Box Score statistics for ad-hoc analysis via SQL queries. Using a Postgres database, a star table design uses fact tables of game by game player performance statistics with dimension tables for players, teams, venues, games and Dates. It is designed to track the 30 MLB teams and players through Spring Training, the Regular Season and the Playoffs whether it be for historical or near real time purposes.
+The programming is designed with the goal of organizing and exposing the data from roster updates and game by game Box Score statistics for ad-hoc analysis via SQL queries. Using a Postgres database. A star table design uses fact tables of game by game player performance statistics with dimension tables for players, teams, venues, games and Dates. It is designed to track the 30 MLB teams and players through Spring Training, the Regular Season and the Playoffs whether it be for historical or near real time purposes.
 
 Each of the Python programs that work with the MLB Stats API or the Postgres database are designed to operate in a standalone mode or as imports. 
 
 ## Project Directory Layout
 
-The project directory is the choice of the installer. In the default installation it is called ```mlb``` as it is depicted below. Wherever in the file system that the project directory is placed and whatever it is called, it becomes the anchor for the subdirectory structure that is required below it.
+The project directory is the choice of the installer. In the default installation it is called `mlb` as it is depicted below. Wherever in the file system that the project directory is placed and whatever it is called, it becomes the anchor for the subdirectory structure that is required below it.
 
 ### Project Root
-``` mlb/ ```
+
+`mlb/`
+
 #### API Endpoint Retrieval and Processing 
+
 ```
 ├── api_boxscore
 ├── api_games
@@ -26,10 +29,15 @@ The project directory is the choice of the installer. In the default installatio
 ```
 
 #### Driver programs that build and execute the ETL pipelines 
+
 ```── basecamp```
+
 #### Shell Scripts that build and execute the ETL pipelines  
+
 ```── bin```
+
 #### Utilities and Extras For ETL Endpoint data 
+
 ```
 ├── bus_game
 ├── bus_games
@@ -158,7 +166,4 @@ One subdirectory below the DB processing directories there is also `db_utils` su
 
 
 ## Drivers
-This code lives in the subdirectory `basecamp`. These programs accomplish specific ETL processing for raw data ingested and format it to handoff to the database processing programs. 
-
-
-
+This code lives in the subdirectory `basecamp`. These programs accomplish specific ETL processing for raw data ingested and format it to handoff to the database processing programs. Also, pipelines are created here that unite elements of the database tables, the API and even external data in order to achieve a combined result. For example, the games database can be used to determine upcoming matchups and then the rosters can be obtained and downloaded from the API so the most current Rosters can be compared with each other for the upcoming contests. 

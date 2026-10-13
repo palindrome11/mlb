@@ -10,9 +10,20 @@ from paths import RAW_DATA, ARCHIVE_PATH
 from bus_rosters.roster_u import deduplicate_files, archive_files
 from db_rosters.rosters_db import insert_roster_capture_data, upsert_roster_snapshot_data
 
-FILE_GLOB = 'roster_snapshot_*.json'
+FILE_GLOB = 'RosterSnapshot_*.json'
 LOCAL_TZ = ZoneInfo("America/New_York")
-PATTERN = re.compile(r"roster_snapshot_(\d+)_(\d{14})\.json$")
+PATTERN = re.compile(
+    r"RosterSnapshot_(?P<team_id>\d+)"
+    r"_(?P<roster_type>[A-Za-z0-9]+)"
+    r"_(?P<snapshot_date>\d{4}-\d{2}-\d{2})"
+    r"_(?P<ts>\d{14})\.json$"
+)
+
+m = PATTERN.search("RosterSnapshot_136_active_2026-10-09_20261009170140.json")
+m.group("team_id")        # '136'
+m.group("roster_type")    # 'active'
+m.group("snapshot_date")  # '2026-10-09'
+m.group("ts")             # '20261009170140'
 
 roster_type = "Active"
 captured_at_inferred = False
@@ -23,7 +34,7 @@ def parse_filename(path: Path) -> tuple[int, datetime]:
     if not m:
         raise ValueError(f"Unexpected filename: {Path(path).name}")
 
-    team_id, stamp = int(m.group(1)), m.group(2)
+    team_id, roster_type, snapshot_date, stamp = int(m.group("team_id")), m.group("roster_type"), m.group("snapshot_date"), m.group("ts")
     local = datetime.strptime(stamp, "%Y%m%d%H%M%S").replace(tzinfo=LOCAL_TZ)
     return team_id, local.astimezone(timezone.utc)
 

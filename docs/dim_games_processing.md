@@ -8,36 +8,69 @@ crontab entry:
 In order to see the games in chronological order of play, there is an SQL query included called 'TodaysGamesChronologialStart.sql' which will list them in order of their play and with the local time of the venue for the Home team displayed.
 
 --- Query:
-
 WITH early_to_late_games AS 
   (
   SELECT
    g.game_pk AS game_pk
+  ,wt.name AS away_team
   ,ht.name AS home_team 
-  ,wt.name AS away_team 
-  ,g.official_date AS official_date
-  ,to_char(g.game_datetime AT TIME ZONE v.time_zone_id, 'FMHH12:MI AM') AS local_start
-  ,v.time_zone_id AS timezone
   ,v.name AS venue
-  ,CONCAT(v.city, ' , ', v.state, NULL) AS locale
+  ,g.official_date AS game_date
+  ,g.game_datetime 
+  ,v.time_zone_id
+  ,to_char(g.game_datetime AT TIME ZONE v.time_zone_id, 'FMHH12:MI AM') AS venue_start_time
+  ,v.time_zone_id AS venue_timezone
+  ,ROUND(EXTRACT(EPOCH FROM (g.game_datetime - now()) / 3600),0) AS hours_to_game
+  ,CONCAT(v.city, ',', v.state, NULL) AS venue_location
+  ,game_type AS game_type
   ,row_number() OVER (ORDER BY g.game_datetime) AS early_to_late
 FROM dim_games g
 JOIN dim_teams ht ON ht.team_id = g.home_team_id
 JOIN dim_teams wt ON wt.team_id = g.away_team_id
 JOIN dim_venues v ON v.venue_id = g.venue_id
-WHERE official_date = current_date
+WHERE official_date = current_date 
+),
+client AS (
+    SELECT local_tz
+    FROM client_config
 )
 SELECT 
 game_pk
-,official_date
+,CASE 
+    WHEN game_type = 'S' THEN 'Spring Training'
+    WHEN game_type = 'R' THEN 'Regular Season'
+    WHEN game_type = 'F' THEN 'Wild Card'
+    WHEN game_type = 'D' THEN 'Division Series'
+    WHEN game_type = 'L' THEN 'League Championship Series' 
+    WHEN game_type = 'W' THEN 'World Series'
+    WHEN game_type = 'C' THEN 'Championship'
+    WHEN game_type = 'P' THEN 'Postseason'
+    WHEN game_type = 'A' THEN 'All-Star Game'
+    WHEN game_type = 'I' THEN 'Intrasquad'
+    WHEN game_type = 'E' THEN 'Exhibition'
+  END AS game_type
+,game_date
 ,away_team
 ,home_team
-,local_start
-,timezone
 ,venue
-,locale
-FROM early_to_late_games
+,venue_location
+,venue_timezone
+,venue_start_time
+,to_char(now() AT TIME ZONE venue_timezone,'FMHH12:MI AM') AS current_venue_time
+,hours_to_game
+,c.local_tz
+,to_char(now() AT TIME ZONE c.local_tz,'FMHH12:MI AM') AS current_local_time
+,to_char(g.game_datetime AT TIME ZONE c.local_tz, 'FMHH12:MI AM') AS local_start_time
+,CASE WHEN ROUND(EXTRACT(EPOCH FROM ((now() AT TIME ZONE c.local_tz) - (now() AT TIME ZONE venue_timezone))) / 3600) > 0 THEN '+'
+     WHEN ROUND(EXTRACT(EPOCH FROM ((now() AT TIME ZONE c.local_tz) - (now() AT TIME ZONE venue_timezone))) / 3600) < 0 THEN ''
+     ELSE ' ' END
+|| ROUND(EXTRACT(EPOCH FROM ((now() AT TIME ZONE c.local_tz) - (now() AT TIME ZONE venue_timezone))) / 3600)::int
+|| CASE WHEN ABS(ROUND(EXTRACT(EPOCH FROM ((now() AT TIME ZONE c.local_tz) - (now() AT TIME ZONE venue_timezone))) / 3600)) = 1
+         THEN '  HR' ELSE '  HRS' END AS tz_diff
+FROM early_to_late_games g
+CROSS JOIN client c
 ORDER BY early_to_late
+
 
 --- End of query
 
@@ -45,7 +78,8 @@ ORDER BY early_to_late
 The Driver program called by cron or independently:
 basecamp. -- This program can be found in the basecamp directory
   
-Although called by cron each day, this program can be run independently with command line arguments. The command line arguments are:
+Although called by cron each hour of each day for the day's games, this program can be run independently with command line arguments. 
+The command line arguments are:
 
 "--date", nargs="+", type=date.fromisoformat, metavar="YYYY-MM-DD",
          help="One or more individual dates",
@@ -67,12 +101,12 @@ Although called by cron each day, this program can be run independently with com
 
 Similar to Roster construction, their are two phases to processing the games:
 
-`games_stage.py` execs the API call and retrieves the games in json formatted files which are placed in the `raw_data/games` directory as staged files. Then a second program is calle `game_loads.py` for upsert to the Postgres database and that being specifically the dim_games table. The infrastrure is there to archive these filesbut it is not enabled by default. SO, once the games data has been inserted to the database, the original json files are deleted. This is the same as Roster processing except the rosters json files are being archived since they are volatile on a day by day basis during the season and we are capturing that activity dor analysis which otherwise would be gone.
+`games_stage.py` execs the API call and retrieves the games in json formatted files which are placed in the `raw_data/games` directory as staged files. Then a second program is calle `game_loads.py` for upsert to the Postgres database and that being specifically the dim_games table. The infrastrure is there to archive these filesbut it is not enabled by default. SO, once the games data has been inserted to the database, the original json files are deleted. This is the same as Roster processing except the rosters json files are being archived since they are volatile on a day by day basis during the season and we are capturing that activity for analysis which otherwise would be gone.
 
 
 
 
-
+                                        s
 
 
 

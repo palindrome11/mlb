@@ -1,2 +1,3 @@
-0 8 * * * cd /Users/cwconlon/@dev/mlb && date >> /Users/cwconlon/@dev/mlb/logs/capture.log && /Users/cwconlon/@dev/mlb/.venv/bin/python api_get_roster.py >> /Users/cwconlon/@dev/mlb/logs/capture.log 2>&1
-30 8 * * * cd /Users/cwconlon/@dev/mlb && date >> /Users/cwconlon/@dev/mlb/logs/load.log && /Users/cwconlon/@dev/mlb/.venv/bin/python roster_loads.py >> /Users/cwconlon/@dev/mlb/logs/load.log 2>&1
+45 8-23 * * * /Users/cwconlon/@dev/mlb/bin/rosters_stage_full.sh >> /Users/cwconlon/@dev/mlb/logs/daily.log 2>&1
+50 8-23 * * * /Users/cwconlon/@dev/mlb/bin/rosters_load.sh >> /Users/cwconlon/@dev/mlb/logs/daily.log 2>&1
+01 8-23 * * * /Users/cwconlon/@dev/mlb/bin/todays_games_load.sh >> /Users/cwconlon/@dev/mlb/logs/daily.log 2>&1
