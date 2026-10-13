@@ -269,6 +269,7 @@ def load_files(
                     ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
                     shutil.move(str(path), ARCHIVE_DIR / Path(path).name)
                 elif on_success == "delete":
+                    print(f"Deleting {path}")
                     Path(path).unlink(missing_ok=True)
             
 

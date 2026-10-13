@@ -1,6 +1,6 @@
 """Streamlit front end for populating dim_games.
 
-Run from the project root:  streamlit run app/streamlit_app.py
+Run from the project root:  streamlit run basecamp/sl_games_build.py
 
 This file collects input and displays results. All the pipeline logic lives in
 basecamp/ so the same load can run from cron without Streamlit installed.

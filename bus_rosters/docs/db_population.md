@@ -2,7 +2,7 @@
 
 1. Populate dim_teams with data
 
-This is done by running `dim_teams_build.py` in the basecamp directory.This will populate the teams database with basic information about each of the MLB teams for a season by asking for the season to populate from the command line. So, run the program, input the season year, and voi;a all the teams relevant to that regular season in the mlb are populated in the table.
+This is done by running `dim_teams_build.py` in the basecamp directory.This will populate the teams database with basic information about each of the MLB teams for a season by asking for the season to populate from the command line. So, run the program, input the season year, and all the teams relevant to that regular season in the mlb are populated in the table.
 
 2. Populate dim_venues with data
 
@@ -22,12 +22,11 @@ There are many choices here regarding what level of granularity in time (today,y
 
 As a means of allowing the user to select criteria relevant to their needs, there is a streamlit app that allows selection from among these choices to create a customized data grouping. Although the common case is likely regular season for a given year, there are many permutations of multiple seasons games, subsets of a certain season's games or just games that are belong to pre-season or post-season. The web interface (streamlit app) is designed to allow for these customizations to be communicated tot he driver programs so that database tables can be updated to reflect the customizations. On the other hand there are common scenarios that can be built with just running a single python program from the command like a full 'regular season' set of games for a given year.
 
-5. Populate dim_date with data
+1. Populate dim_date with data
 
 The dim_date table is pretty much a static dimension table designed ot provide an easy way to get the attributes of a day without having to go through hoops of extraction and formatting. Populate this table via the driver program in the basecamp subdirectory and it will fill in the data for every daya from 01/01/2020 to 12/31/2035. It will alos do the season overlays on the dates marking the starting and ending dates of the pre-season, regular_season, and post_season. 
 
 
-Brady 
 
 
 

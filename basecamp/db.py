@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+import socket
 
 import psycopg2
 from dotenv import load_dotenv
@@ -15,6 +16,9 @@ from dotenv import load_dotenv
 ENV_PATH = Path(__file__).resolve().parents[1] / ".env"
 load_dotenv(ENV_PATH)
 
+def client_id() -> str:
+    """Stable client name: hostname without the domain suffix, lowercased."""
+    return socket.gethostname().split(".")[0].lower()
 
 def conn_kwargs(dbname: str | None = None) -> dict:
     """psycopg2.connect() kwargs from the project's DB_* variables.
@@ -31,7 +35,7 @@ def conn_kwargs(dbname: str | None = None) -> dict:
     }
 
 
-def connect(conn_info: dict | str | None = None):
+def connect(conn_info: dict | str | None = None) -> psycopg2.extensions.connection:
     """Open a connection. Caller closes it -- use contextlib.closing().
 
     Accepts a kwargs dict, a DSN string, or nothing (falls back to DB_*).
@@ -39,5 +43,8 @@ def connect(conn_info: dict | str | None = None):
     if conn_info is None:
         conn_info = conn_kwargs()
     if isinstance(conn_info, str):
-        return psycopg2.connect(conn_info)
-    return psycopg2.connect(**conn_info)
+        if "application_name" in conn_info:
+            return psycopg2.connect(conn_info)
+        return psycopg2.connect(conn_info, application_name=client_id())
+    return psycopg2.connect(**{"application_name": client_id(), **conn_info})
+
